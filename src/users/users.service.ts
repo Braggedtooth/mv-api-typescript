@@ -1,5 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { AuthService } from 'src/auth/auth.service';
 import { PasswordService } from 'src/auth/password/password.service';
@@ -8,14 +10,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
-    private readonly authService :AuthService
-  
-  ) {}
-  async create(payload: CreateUserDto ) {
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
+
+  ) { }
+  async create(payload: CreateUserDto) {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password
     );
@@ -26,23 +29,23 @@ export class UsersService {
           ...payload,
           password: hashedPassword
         },
-        select:{
-          id:true,
-          role:true,
-          email:true,
-          verified:true,
-          status:true,
-          firstname:true,
-          lastname:true,
-          createdAt:true,
-          updatedAt:true,
+        select: {
+          id: true,
+          role: true,
+          email: true,
+          verified: true,
+          status: true,
+          firstname: true,
+          lastname: true,
+          createdAt: true,
+          updatedAt: true,
         }
       });
       const token = this.authService.generateTokens({
         userId: user.id,
-        role:user.role
+        role: user.role
       })
-       return {...token, user}
+      return { ...token, user }
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -54,7 +57,13 @@ export class UsersService {
       }
     }
   }
+  validateUser(userId: string): Promise<User> {
+    return this.prisma.user.findUnique({ where: { id: userId } });
+  }
 
+  async getUserFromToken(userId: string): Promise<User> {
+    return this.prisma.user.findUnique({ where: { id: userId } });
+  }
 
   findAll() {
     return `This action returns all users`;
@@ -71,4 +80,7 @@ export class UsersService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+
+
 }

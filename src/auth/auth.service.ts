@@ -13,6 +13,7 @@ import { PasswordService } from './password/password.service';
 import { Token } from '../common/models/token.model';
 import { SecurityConfig } from '../common/config/config.interface';
 import { LoginDto } from './dto/login.dto';
+import { JwtDto } from './dto/jwt.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,10 +22,10 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
     private readonly configService: ConfigService
-  ) {}
+  ) { }
 
 
-  async login({email, password}:LoginDto): Promise<Token> {
+  async login({ email, password }: LoginDto): Promise<Token> {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
@@ -46,27 +47,20 @@ export class AuthService {
     });
   }
 
-  validateUser(userId: string): Promise<User> {
-    return this.prisma.user.findUnique({ where: { id: userId } });
-  }
 
-  getUserFromToken(token: string): Promise<User> {
-    const id = this.jwtService.decode(token)['userId'];
-    return this.prisma.user.findUnique({ where: { id } });
-  }
 
-  generateTokens(payload: { userId: string , role: Roles}): Token {
+  generateTokens(payload: { userId: string, role: Roles }): Token {
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload),
     };
   }
 
-  private generateAccessToken(payload: { userId: string }): string {
+  private generateAccessToken(payload: JwtDto): string {
     return this.jwtService.sign(payload);
   }
 
-  private generateRefreshToken(payload: { userId: string }): string {
+  private generateRefreshToken(payload: JwtDto): string {
     const securityConfig = this.configService.get<SecurityConfig>('security');
     return this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
@@ -76,7 +70,7 @@ export class AuthService {
 
   async refreshToken(token: string) {
     try {
-      const { userId , role} = await this.jwtService.verify(token, {
+      const { userId, role } = await this.jwtService.verify(token, {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
       });
 
@@ -85,7 +79,9 @@ export class AuthService {
         role
       });
     } catch (e) {
-      throw new UnauthorizedException();
+      console.log(e);
+
+      throw new UnauthorizedException("Invalid Token");
     }
   }
 }

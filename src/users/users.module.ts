@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { PasswordService } from 'src/auth/password/password.service';
 import { AuthService } from 'src/auth/auth.service';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SecurityConfig } from 'src/common/config/config.interface';
 
@@ -25,7 +25,6 @@ import { SecurityConfig } from 'src/common/config/config.interface';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, PasswordService, AuthService
-  ]
+  providers: [UsersService, PasswordService, AuthService]
 })
 export class UsersModule { }
