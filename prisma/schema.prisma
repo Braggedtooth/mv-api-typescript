@@ -5,7 +5,97 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider="prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String        @id @default(uuid())
+  firstname String
+  lastname  String
+  password  String
+  email     String        @unique
+  reviews   Review[]
+  comments  Comment[]
+  OTP       Otp?
+  role      Roles         @default(USER)
+  verified  Boolean       @default(false)
+  status    AccountStatus @default(ACTIVE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Review {
+  id         String    @id @default(uuid())
+  title      String
+  content    String
+  rating     Int       @default(0)
+  published  Boolean   @default(true)
+  authorId   String
+  realtorsId String
+  comments   Comment[]
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Realtors   Realtors  @relation(fields: [realtorsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  authorId  String
+  reviewId  String
+  content   String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Realtors {
+  id               String   @id @default(uuid())
+  firstname        String
+  lastname         String
+  websiteurl       String
+  registrationdate String
+  companyId        String
+  reviews          Review[]
+  Company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Company {
+  id        String     @id @default(uuid())
+  address   String
+  agents    Realtors[]
+  city      String
+  name      String
+  zip_code  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Otp {
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  expires BigInt
+  userId  String @unique
+}
+
+enum Roles {
+  USER
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  PENDING
+  BANNED
+  DELETED
 }

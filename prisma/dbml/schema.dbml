@@ -1,0 +1,100 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  firstname String [not null]
+  lastname String [not null]
+  password String [not null]
+  email String [unique, not null]
+  reviews Review [not null]
+  comments Comment [not null]
+  OTP Otp
+  role Roles [not null, default: 'USER']
+  verified Boolean [not null, default: false]
+  status AccountStatus [not null, default: 'ACTIVE']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Review {
+  id String [pk]
+  title String [not null]
+  content String [not null]
+  rating Int [not null, default: 0]
+  published Boolean [not null, default: true]
+  authorId String [not null]
+  realtorsId String [not null]
+  comments Comment [not null]
+  author User [not null]
+  Realtors Realtors [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Comment {
+  id String [pk]
+  authorId String [not null]
+  reviewId String [not null]
+  content String [not null]
+  author User [not null]
+  review Review [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Realtors {
+  id String [pk]
+  firstname String [not null]
+  lastname String [not null]
+  websiteurl String [not null]
+  registrationdate String [not null]
+  companyId String [not null]
+  reviews Review [not null]
+  Company Company [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Company {
+  id String [pk]
+  address String [not null]
+  agents Realtors [not null]
+  city String [not null]
+  name String [not null]
+  zip_code String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Otp {
+  id String [pk]
+  user User [not null]
+  expires BigInt [not null]
+  userId String [unique, not null]
+}
+
+Enum Roles {
+  USER
+  ADMIN
+}
+
+Enum AccountStatus {
+  ACTIVE
+  PENDING
+  BANNED
+  DELETED
+}
+
+Ref: Review.authorId > User.id [delete: Cascade]
+
+Ref: Review.realtorsId > Realtors.id [delete: Cascade]
+
+Ref: Comment.authorId > User.id [delete: Cascade]
+
+Ref: Comment.reviewId > Review.id [delete: Cascade]
+
+Ref: Realtors.companyId > Company.id [delete: Cascade]
+
+Ref: Otp.userId - User.id [delete: Cascade]
