@@ -2,24 +2,23 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Roles, User } from '@prisma/client';
 import { Role } from '../common/decorators/role.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { UserResponse } from '../common/models/user.model';
 import { RoleGuard } from 'src/common/guards/role.guard';
-import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags("Users")
-@UseGuards(AuthGuard("jwt"))
+
+@ApiTags('Users')
+@UseGuards(RoleGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  @UseGuards( RoleGuard)
+  @Role('ADMIN')
   @Post("create")
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponse>{
-     const {user} = await this.usersService.create(createUserDto)
-     return user
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponse> {
+    const { user } = await this.usersService.create(createUserDto)
+    return user
   }
 
   @Get()

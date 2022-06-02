@@ -1,19 +1,21 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/decorators/public.decorator';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags("Auth")
+@Public()
 @Controller('auth')
 export class AuthController {
     constructor(
-        private readonly auth: AuthService, 
-        private readonly userService:UsersService) {}
+        private readonly auth: AuthService,
+        private readonly userService: UsersService) { }
     @Post("login")
-    async login(@Body() loginDto:LoginDto) {
-        const {accessToken, refreshToken } = await this.auth.login(loginDto)
+    async login(@Body() loginDto: LoginDto) {
+        const { accessToken, refreshToken } = await this.auth.login(loginDto)
         return {
             accessToken,
             refreshToken
@@ -21,25 +23,25 @@ export class AuthController {
 
     }
     @Post("signup")
-   async signup(@Body() signUpDto:CreateUserDto)  {
-    const {accessToken, refreshToken} = await this.userService.create(signUpDto)
-    return {
-        accessToken,
-        refreshToken
+    async signup(@Body() signUpDto: CreateUserDto) {
+        const { accessToken, refreshToken } = await this.userService.create(signUpDto)
+        return {
+            accessToken,
+            refreshToken
+        }
+
     }
-       
-   }
-   @Post("refresh-token")
-     async  refreshToken(@Param() token:string) {
-        const {refreshToken, accessToken} = await this.auth.refreshToken(token)
+    @Post("refresh-token")
+    async refreshToken(@Param() token: string) {
+        const { refreshToken, accessToken } = await this.auth.refreshToken(token)
         return {
             accessToken,
             refreshToken
         }
     }
     @Post("me")
-    async me(@Param() token:string) { 
-        const {password, ...result} = await this.auth.getUserFromToken(token)
+    async me(@Param() token: string) {
+        const { password, ...result } = await this.auth.getUserFromToken(token)
         return result
     }
 }

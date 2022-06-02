@@ -7,6 +7,8 @@ import { loggingMiddleware } from './common/middleware/logging.middleware';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import config from './common/config/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './common/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -21,6 +23,9 @@ import config from './common/config/config';
     AuthModule,
 ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, {
+    provide: APP_GUARD,
+    useClass: JwtGuard,
+  },],
 })
 export class AppModule {}
