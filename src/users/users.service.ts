@@ -15,19 +15,18 @@ export class UsersService {
     private readonly passwordService: PasswordService,
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
-
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
   async create(payload: CreateUserDto) {
     const hashedPassword = await this.passwordService.hashPassword(
-      payload.password
+      payload.password,
     );
 
     try {
       const user = await this.prisma.user.create({
         data: {
           ...payload,
-          password: hashedPassword
+          password: hashedPassword,
         },
         select: {
           id: true,
@@ -39,13 +38,13 @@ export class UsersService {
           lastname: true,
           createdAt: true,
           updatedAt: true,
-        }
+        },
       });
       const token = this.authService.generateTokens({
         userId: user.id,
-        role: user.role
-      })
-      return { ...token, user }
+        role: user.role,
+      });
+      return { ...token, user };
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -80,7 +79,4 @@ export class UsersService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
-
-
-
 }

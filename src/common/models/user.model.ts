@@ -1,3 +1,3 @@
-import { User } from "@prisma/client";
+import { User } from '@prisma/client';
 
-export type UserResponse = Omit<User,"password" >
+export type UserResponse = Omit<User, 'password'>;

@@ -25,6 +25,6 @@ import { SecurityConfig } from 'src/common/config/config.interface';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, PasswordService, AuthService]
+  providers: [UsersService, PasswordService, AuthService],
 })
-export class UsersModule { }
+export class UsersModule {}

@@ -4,11 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '@prisma/client';
 import { ROLES_KEY } from '../CONSTANTS';
 
-
-
 @Injectable()
 export class RoleGuard extends AuthGuard('jwt') {
-
   constructor(private reflector: Reflector) {
     super();
   }
@@ -22,10 +19,8 @@ export class RoleGuard extends AuthGuard('jwt') {
       return false;
     }
     const { user } = context.switchToHttp().getRequest();
-    console.log(user.role, "Hello from RoleGuard");
+    console.log(user.role, 'Hello from RoleGuard');
 
-    return requiredRoles.some((role) => user.role === role)
+    return requiredRoles.some((role) => user.role === role);
   }
-
 }
-

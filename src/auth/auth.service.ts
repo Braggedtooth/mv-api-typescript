@@ -21,9 +21,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
-    private readonly configService: ConfigService
-  ) { }
-
+    private readonly configService: ConfigService,
+  ) {}
 
   async login({ email, password }: LoginDto): Promise<Token> {
     const user = await this.prisma.user.findUnique({ where: { email } });
@@ -34,7 +33,7 @@ export class AuthService {
 
     const passwordValid = await this.passwordService.validatePassword(
       password,
-      user.password
+      user.password,
     );
 
     if (!passwordValid) {
@@ -43,13 +42,11 @@ export class AuthService {
 
     return this.generateTokens({
       userId: user.id,
-      role: user.role
+      role: user.role,
     });
   }
 
-
-
-  generateTokens(payload: { userId: string, role: Roles }): Token {
+  generateTokens(payload: { userId: string; role: Roles }): Token {
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload),
@@ -76,12 +73,12 @@ export class AuthService {
 
       return this.generateTokens({
         userId,
-        role
+        role,
       });
     } catch (e) {
       console.log(e);
 
-      throw new UnauthorizedException("Invalid Token");
+      throw new UnauthorizedException('Invalid Token');
     }
   }
 }

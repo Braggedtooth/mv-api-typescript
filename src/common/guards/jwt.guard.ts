@@ -1,8 +1,7 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport'
+import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../CONSTANTS';
-
 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
@@ -21,4 +20,3 @@ export class JwtGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 }
-

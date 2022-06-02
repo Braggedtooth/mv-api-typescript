@@ -5,7 +5,7 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
-  getHelloName(name:string): string{
-    return "hello"+ name
+  getHelloName(name: string): string {
+    return 'hello' + name;
   }
 }
