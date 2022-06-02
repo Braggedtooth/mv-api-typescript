@@ -22,10 +22,10 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async login({ email, password }: LoginDto): Promise<Token> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findFirst({ where: { email } });
 
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -39,6 +39,21 @@ export class AuthService {
     if (!passwordValid) {
       throw new BadRequestException('Invalid password');
     }
+    if (!user.verified) {
+      throw new UnauthorizedException("Your account is not verified")
+    }
+    switch (user.status) {
+      case 'BANNED':
+        throw new UnauthorizedException("Your account has been banned")
+      case 'PENDING':
+        throw new UnauthorizedException("Your account is pending")
+      case 'DELETED':
+        throw new UnauthorizedException('Your account has been deleted')
+      default:
+        break;
+    }
+
+
 
     return this.generateTokens({
       userId: user.id,
