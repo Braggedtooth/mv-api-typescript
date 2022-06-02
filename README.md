@@ -38,10 +38,10 @@ $ npm run test:cov
 ```
 
 ## Docs 
-[Api documentation by swagger](http://localhost:300/docs)
+[Api documentation by swagger](http://localhost:3000/docs)
 
 ## Stay in touch
 
-- Author - [Adebayo](https://github.com/Braggedtoot)
+- Author - [Adebayo](https://github.com/Braggedtooth)
 - Website - [https://mv.bayo.se](https://mv.bayo.se)
 
