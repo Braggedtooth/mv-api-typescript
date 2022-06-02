@@ -1,6 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { ApiProduces, ApiProperty, PartialType } from '@nestjs/swagger';
+import { Roles } from '@prisma/client';
+import { Role } from '../../common/decorators/role.decorator';
+import { CreateUserDto } from '../../common/dtos/create-user.dto';
+
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  role;
+  @ApiProperty({ enum: Roles })
+  role?: Roles
+
 }

@@ -12,7 +12,7 @@ const config: Config = {
     title: 'Mäklare Visionens API',
     description: 'The MV API description',
     version: '1.0',
-    path: 'api',
+    path: 'docs',
   },
   security: {
     expiresIn: '7d',

@@ -6,7 +6,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { SecurityConfig } from 'src/common/config/config.interface';
+import { SecurityConfig } from '../common/config/config.interface';
 
 @Module({
   imports: [
