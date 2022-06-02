@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -9,11 +10,16 @@ import { ConfigModule } from '@nestjs/config';
 import config from './common/config/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './common/guards/jwt.guard';
+import { TerminusModule } from '@nestjs/terminus';
+import { PrismaHealthIndicator } from './healthcheck/db.healthcheck';
+import { ServiceHealthIndicator } from './healthcheck/status.healthcheck';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     UsersModule,
+    TerminusModule,
+    HttpModule,
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
@@ -26,10 +32,12 @@ import { JwtGuard } from './common/guards/jwt.guard';
   providers: [
     AppService,
     PrismaService,
+    ServiceHealthIndicator,
+    PrismaHealthIndicator,
     {
       provide: APP_GUARD,
       useClass: JwtGuard,
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
