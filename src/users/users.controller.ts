@@ -1,15 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles, User } from '@prisma/client';
+import { Role } from '../common/decorators/role.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { UserResponse } from '../common/models/user.model';
+import { RoleGuard } from 'src/common/guards/role.guard';
+import { AuthGuard } from '@nestjs/passport';
 
+@ApiTags("Users")
+@UseGuards(AuthGuard("jwt"))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @UseGuards( RoleGuard)
+  @Post("create")
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponse>{
+     const {user} = await this.usersService.create(createUserDto)
+     return user
   }
 
   @Get()
