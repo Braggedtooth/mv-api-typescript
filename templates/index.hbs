@@ -4,7 +4,9 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Simple Transactional Email</title>
+    <title>Verification Email</title>
+    <script src="/bower_components/jquery.countdown/dist/jquery.countdown.js"></script>
+
     <style>
         /* -------------------------------------
           GLOBAL RESETS
@@ -371,7 +373,7 @@
                                     <tr>
                                         <td>
                                             <p>Hi there,</p>
-                                            <p>{{firstname}},{{lastname}} </p>
+                                            <p>{{name}} </p>
                                             <p>Welcome to MäklareVisionen</p>
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                                 class="btn btn-primary">
@@ -391,8 +393,8 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <p>The verification link will expire in {{expiration}}</p>
-                                            <p>This email was sent to you because you registered an account at <a href="https://mv.bayo.se">MäklareVisionen</a></p>
+                                            <p>The verification link will expire <time>{{expiration}}</time></p>
+
                                         </td>
                                     </tr>
                                 </table>
