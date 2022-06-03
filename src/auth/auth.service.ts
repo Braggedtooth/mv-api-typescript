@@ -1,19 +1,19 @@
-import { PrismaService } from 'nestjs-prisma';
-import { Prisma, Roles, User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma'
+import { Prisma, Roles, User } from '@prisma/client'
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
   ConflictException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { PasswordService } from './password/password.service';
-import { Token } from '../common/models/token.model';
-import { SecurityConfig } from '../common/config/config.interface';
-import { LoginDto } from './dto/login.dto';
-import { JwtDto } from './dto/jwt.dto';
+} from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
+import { PasswordService } from './password/password.service'
+import { Token } from '../common/models/token.model'
+import { SecurityConfig } from '../common/config/config.interface'
+import { LoginDto } from './dto/login.dto'
+import { JwtDto } from './dto/jwt.dto'
 
 @Injectable()
 export class AuthService {
@@ -25,73 +25,73 @@ export class AuthService {
   ) {}
 
   async login({ email, password }: LoginDto): Promise<Token> {
-    const user = await this.prisma.user.findFirst({ where: { email } });
+    const user = await this.prisma.user.findFirst({ where: { email } })
 
     if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
+      throw new NotFoundException(`No user found for email: ${email}`)
     }
 
     const passwordValid = await this.passwordService.validatePassword(
       password,
       user.password,
-    );
+    )
 
     if (!passwordValid) {
-      throw new BadRequestException('Invalid password');
+      throw new BadRequestException('Invalid password')
     }
     if (!user.verified) {
-      throw new UnauthorizedException('Your account is not verified');
+      throw new UnauthorizedException('Your account is not verified')
     }
     switch (user.status) {
       case 'BANNED':
-        throw new UnauthorizedException('Your account has been banned');
+        throw new UnauthorizedException('Your account has been banned')
       case 'PENDING':
-        throw new UnauthorizedException('Your account is pending');
+        throw new UnauthorizedException('Your account is pending')
       case 'DELETED':
-        throw new UnauthorizedException('Your account has been deleted');
+        throw new UnauthorizedException('Your account has been deleted')
       default:
-        break;
+        break
     }
 
     return this.generateTokens({
       userId: user.id,
       role: user.role,
-    });
+    })
   }
 
   generateTokens(payload: { userId: string; role: Roles }): Token {
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload),
-    };
+    }
   }
 
   private generateAccessToken(payload: JwtDto): string {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload)
   }
 
   private generateRefreshToken(payload: JwtDto): string {
-    const securityConfig = this.configService.get<SecurityConfig>('security');
+    const securityConfig = this.configService.get<SecurityConfig>('security')
     return this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
       expiresIn: securityConfig.refreshIn,
-    });
+    })
   }
 
   async refreshToken(token: string) {
     try {
       const { userId, role } = await this.jwtService.verify(token, {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
-      });
+      })
 
       return this.generateTokens({
         userId,
         role,
-      });
+      })
     } catch (e) {
-      console.log(e);
+      console.log(e)
 
-      throw new UnauthorizedException('Invalid Token');
+      throw new UnauthorizedException('Invalid Token')
     }
   }
 }

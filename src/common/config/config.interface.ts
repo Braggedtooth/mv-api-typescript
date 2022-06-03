@@ -1,33 +1,33 @@
 export interface Config {
-  nest: NestConfig;
-  cors: CorsConfig;
-  swagger: SwaggerConfig;
-  security: SecurityConfig;
-  email: EmailConfig;
+  nest: NestConfig
+  cors: CorsConfig
+  swagger: SwaggerConfig
+  security: SecurityConfig
+  email: EmailConfig
 }
 
 export interface NestConfig {
-  port: number;
+  port: number
 }
 
 export interface CorsConfig {
-  enabled: boolean;
+  enabled: boolean
 }
 
 export interface SwaggerConfig {
-  enabled: boolean;
-  title: string;
-  description: string;
-  version: string;
-  path: string;
+  enabled: boolean
+  title: string
+  description: string
+  version: string
+  path: string
 }
 export interface EmailConfig {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 export interface SecurityConfig {
-  expiresIn: string;
-  refreshIn: string;
-  bcryptSaltOrRound: string | number;
+  expiresIn: string
+  refreshIn: string
+  bcryptSaltOrRound: string | number
 }

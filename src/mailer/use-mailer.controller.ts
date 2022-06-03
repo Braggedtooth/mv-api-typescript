@@ -1,6 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
-import { Public } from '../common/decorators/public.decorator';
-import { UseMailerService } from './use-mailer.service';
+import { Controller, Get } from '@nestjs/common'
+import { Public } from '../common/decorators/public.decorator'
+import { UseMailerService } from './use-mailer.service'
 
 @Public()
 @Controller('use-mailer')
@@ -9,6 +9,6 @@ export class UseMailerController {
 
   @Get()
   sendeMail() {
-    return this.useMailerService.verificationMail();
+    return this.useMailerService.verificationMail()
   }
 }

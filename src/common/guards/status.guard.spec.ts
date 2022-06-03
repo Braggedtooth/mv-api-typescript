@@ -1,7 +1,7 @@
-import { StatusGuard } from './status.guard';
+import { StatusGuard } from './status.guard'
 
 describe('StatusGuard', () => {
   it('should be defined', () => {
-    expect(new StatusGuard()).toBeDefined();
-  });
-});
+    expect(new StatusGuard()).toBeDefined()
+  })
+})

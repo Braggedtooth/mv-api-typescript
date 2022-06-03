@@ -1,24 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { AccountStatus, Roles } from '@prisma/client';
-import { UserType } from '../types/user.model';
+import { ApiProperty } from '@nestjs/swagger'
+import { AccountStatus, Roles } from '@prisma/client'
+import { UserType } from '../types/user.model'
 
 export class UserModel {
   @ApiProperty()
-  id: string;
+  id: string
   @ApiProperty()
-  firstname: string;
+  firstname: string
   @ApiProperty()
-  lastname: string;
+  lastname: string
   @ApiProperty()
-  email: string;
+  email: string
   @ApiProperty({ enum: Roles })
-  role: Roles;
+  role: Roles
   @ApiProperty({ enum: AccountStatus })
-  status: AccountStatus;
+  status: AccountStatus
   @ApiProperty()
-  verified: boolean;
+  verified: boolean
   @ApiProperty()
-  createdAt: Date;
+  createdAt: Date
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt: Date
 }

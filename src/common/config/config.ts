@@ -1,4 +1,4 @@
-import { Config } from './config.interface';
+import { Config } from './config.interface'
 
 const config: Config = {
   nest: {
@@ -23,6 +23,6 @@ const config: Config = {
     username: process.env.EMAIL_USERNAME,
     password: process.env.EMAIL_PASSWORD,
   },
-};
+}
 
-export default (): Config => config;
+export default (): Config => config
