@@ -24,10 +24,6 @@ export class AppController {
   status() {
     return "OK!"
   }
-  @Get('mail')
-  async mail() {
-    return this.appService.example()
-  }
 
   @Get("status")
   @HealthCheck()

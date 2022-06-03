@@ -19,6 +19,10 @@ const config: Config = {
     refreshIn: '7d',
     bcryptSaltOrRound: 10,
   },
+  email: {
+    username: process.env.EMAIL_USERNAME,
+    password: process.env.EMAIL_PASSWORD
+  }
 };
 
 export default (): Config => config;
