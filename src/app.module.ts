@@ -13,6 +13,11 @@ import { JwtGuard } from './common/guards/jwt.guard';
 import { TerminusModule } from '@nestjs/terminus';
 import { PrismaHealthIndicator } from './healthcheck/db.healthcheck';
 import { ServiceHealthIndicator } from './healthcheck/status.healthcheck';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
+
+
+
 
 @Module({
   imports: [
@@ -27,6 +32,32 @@ import { ServiceHealthIndicator } from './healthcheck/status.healthcheck';
       },
     }),
     AuthModule,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          service: "gmail",
+          auth: {
+            user: "",
+            pass: ""
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        },
+
+        defaults: {
+          from: '"nest-modules" <modules@nestjs.com>',
+        },
+        template: {
+          dir: process.cwd() + '/templates/',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+        preview: true
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [
