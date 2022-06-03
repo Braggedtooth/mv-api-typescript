@@ -36,4 +36,4 @@ import { UsersService } from '../users/users.service';
   exports: [RoleGuard],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

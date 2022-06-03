@@ -13,11 +13,8 @@ import { JwtGuard } from './common/guards/jwt.guard';
 import { TerminusModule } from '@nestjs/terminus';
 import { PrismaHealthIndicator } from './healthcheck/db.healthcheck';
 import { ServiceHealthIndicator } from './healthcheck/status.healthcheck';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { UseMailerModule } from './mailer/use-mailer.module';
-
-
-
 
 @Module({
   imports: [
@@ -46,4 +43,4 @@ import { UseMailerModule } from './mailer/use-mailer.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

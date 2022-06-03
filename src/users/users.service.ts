@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { AuthService } from '../auth/auth.service';
@@ -13,7 +17,7 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
     private readonly authService: AuthService,
-  ) { }
+  ) {}
   async create(payload: CreateUserDto) {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password,
@@ -54,7 +58,6 @@ export class UsersService {
     }
   }
 
-
   validateUser(userId: string): Promise<User> {
     return this.prisma.user.findUnique({ where: { id: userId } });
   }
@@ -67,8 +70,8 @@ export class UsersService {
     const user = await this.prisma.user.findMany({
       where: {
         status: {
-          not: 'DELETED'
-        }
+          not: 'DELETED',
+        },
       },
       select: {
         id: true,
@@ -79,11 +82,11 @@ export class UsersService {
         status: true,
         verified: true,
         createdAt: true,
-        updatedAt: true
-      }
-    })
+        updatedAt: true,
+      },
+    });
 
-    return user
+    return user;
   }
 
   async findOne(id: string): Promise<UserType> {
@@ -91,8 +94,8 @@ export class UsersService {
       where: {
         id,
         status: {
-          not: 'DELETED'
-        }
+          not: 'DELETED',
+        },
       },
       select: {
         id: true,
@@ -103,45 +106,46 @@ export class UsersService {
         status: true,
         verified: true,
         createdAt: true,
-        updatedAt: true
-      }
-    })
+        updatedAt: true,
+      },
+    });
 
-    return user
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserType> {
-    const { email, firstname, lastname } = updateUserDto
+    const { email, firstname, lastname } = updateUserDto;
     if (email || lastname || firstname) {
       const user = await this.prisma.user.update({
         where: { id },
         data: {
           email,
           firstname,
-          lastname
-        }
-      })
-      return user
+          lastname,
+        },
+      });
+      return user;
     }
-
   }
 
   async remove(id: string) {
     const user = await this.prisma.user.findFirst({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
     if (user.role === 'ADMIN') {
-      throw new UnauthorizedException("cannot change the role of an admin user")
+      throw new UnauthorizedException(
+        'cannot change the role of an admin user',
+      );
     }
     if (user.status !== 'DELETED') {
       return await this.prisma.user.update({
         where: { id: id },
         data: {
-          status: 'DELETED'
-        }
-      })
+          status: 'DELETED',
+        },
+      });
     }
   }
 }

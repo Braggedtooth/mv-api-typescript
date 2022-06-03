@@ -21,8 +21,8 @@ const config: Config = {
   },
   email: {
     username: process.env.EMAIL_USERNAME,
-    password: process.env.EMAIL_PASSWORD
-  }
+    password: process.env.EMAIL_PASSWORD,
+  },
 };
 
 export default (): Config => config;

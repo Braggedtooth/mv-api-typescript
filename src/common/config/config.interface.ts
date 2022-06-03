@@ -3,7 +3,7 @@ export interface Config {
   cors: CorsConfig;
   swagger: SwaggerConfig;
   security: SecurityConfig;
-  email:EmailConfig
+  email: EmailConfig;
 }
 
 export interface NestConfig {
@@ -21,9 +21,9 @@ export interface SwaggerConfig {
   version: string;
   path: string;
 }
-export interface EmailConfig{ 
-  username :string 
-  password :string
+export interface EmailConfig {
+  username: string;
+  password: string;
 }
 
 export interface SecurityConfig {

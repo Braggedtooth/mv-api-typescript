@@ -9,15 +9,13 @@ import { LoginDto } from './dto/login.dto';
 import { Token } from '../common/models/token.model';
 import { UserModel } from '../common/models/user.model';
 
-
-
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly userService: UsersService,
-  ) { }
+  ) {}
 
   @Public()
   @Post('signup')

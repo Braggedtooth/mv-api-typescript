@@ -11,14 +11,14 @@ import { EmailConfig } from '../common/config/config.interface';
     MailerModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
         transport: {
-          service: "gmail",
+          service: 'gmail',
           auth: {
             user: config.get<EmailConfig>('email').username,
-            pass: config.get<EmailConfig>('email').password
+            pass: config.get<EmailConfig>('email').password,
           },
           tls: {
-            rejectUnauthorized: false
-          }
+            rejectUnauthorized: false,
+          },
         },
 
         defaults: {
@@ -37,7 +37,6 @@ import { EmailConfig } from '../common/config/config.interface';
     }),
   ],
   controllers: [UseMailerController],
-  providers: [UseMailerService]
+  providers: [UseMailerService],
 })
-export class UseMailerModule {
-}
+export class UseMailerModule {}
