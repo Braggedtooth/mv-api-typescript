@@ -10,6 +10,7 @@ import { PasswordService } from '../auth/password/password.service'
 import { UserType } from '../common/types/user.model'
 import { CreateUserDto } from '../common/dtos/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { UseMailerService } from '../mailer/use-mailer.service'
 
 @Injectable()
 export class UsersService {
@@ -17,13 +18,15 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly passwordService: PasswordService,
     private readonly authService: AuthService,
-  ) {}
+    private readonly mailerService: UseMailerService
+  ) { }
   async create(payload: CreateUserDto) {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password,
     )
 
     try {
+
       const user = await this.prisma.user.create({
         data: {
           ...payload,
@@ -41,11 +44,25 @@ export class UsersService {
           updatedAt: true,
         },
       })
-      const token = this.authService.generateTokens({
-        userId: user.id,
-        role: user.role,
+      const code = await this.prisma.otp.create({
+        data: {
+          userId: user.id,
+          expires: Date.now() + 900000
+        }
       })
-      return { ...token, user }
+      const encrpyt= Buffer.from(payload.email)
+      const VERIFICATION_URL = `http://mv.bayo.se/verify?token=${payload}`
+      const mailPayload = { name: `${payload.firstname} ${user.lastname}`, address: payload.email, verificationUrl: VERIFICATION_URL }
+      try {
+        await this.mailerService.verificationMail(mailPayload)
+        return user
+
+      } catch (error) {
+        throw new ConflictException('Could not send verification email', error)
+
+      }
+
+
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&

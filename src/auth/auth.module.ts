@@ -9,6 +9,7 @@ import { JwtStrategy } from './password/jwt.strategy'
 import { PasswordService } from './password/password.service'
 import { AuthController } from './auth.controller'
 import { UsersService } from '../users/users.service'
+import { UseMailerService } from '../mailer/use-mailer.service'
 
 @Module({
   imports: [
@@ -32,8 +33,9 @@ import { UsersService } from '../users/users.service'
     RoleGuard,
     UsersService,
     PasswordService,
+    UseMailerService
   ],
   exports: [RoleGuard],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

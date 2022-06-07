@@ -6,7 +6,7 @@ import { MailDto } from './dto/mail.dto'
 @Injectable()
 export class UseMailerService {
     constructor(private readonly mailerService: MailerService) { }
-    verificationMail(payload: MailDto) {
+    async verificationMail(payload: MailDto) {
         const now = Date.now()
         const exp = format(now + 900000, 'hh:mm')
         try {

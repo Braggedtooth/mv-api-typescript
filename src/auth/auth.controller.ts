@@ -15,18 +15,16 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   @Public()
   @Post('signup')
-  async signup(@Body() signUpDto: CreateUserDto): Promise<Token> {
-    const { accessToken, refreshToken } = await this.userService.create(
+  async signup(@Body() signUpDto: CreateUserDto): Promise<UserModel> {
+    const user = await this.userService.create(
       signUpDto,
     )
-    return {
-      accessToken,
-      refreshToken,
-    }
+    return user
+
   }
 
   @Public()

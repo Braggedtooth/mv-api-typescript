@@ -21,13 +21,14 @@ import { UserType } from '../common/types/user.model'
 @UseGuards(RoleGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService
+  ) { }
 
   @Role('ADMIN')
   @ApiBearerAuth()
   @Post('create')
   async create(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
-    const { user } = await this.usersService.create(createUserDto)
+    const user = await this.usersService.create(createUserDto)
     return user
   }
   @Role('ADMIN')

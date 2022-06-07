@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { SecurityConfig } from '../common/config/config.interface'
+import { UseMailerService } from '../mailer/use-mailer.service'
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { SecurityConfig } from '../common/config/config.interface'
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, PasswordService, AuthService],
+  providers: [UsersService, PasswordService, AuthService, UseMailerService],
 })
-export class UsersModule {}
+export class UsersModule { }
